@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class ToastUtils {
   static BuildContext _context;
+  static OverlayEntry _overlayEntry;
+  static Timer _timer;
 
   ToastUtils._();
 
@@ -10,8 +14,10 @@ class ToastUtils {
   }
 
   static void showToast(String message, {BuildContext context}) {
+    _overlayEntry?.remove();
+    _timer?.cancel();
     OverlayState overlayState = Overlay.of(context ?? _context);
-    OverlayEntry overlayEntry = OverlayEntry(
+    _overlayEntry = OverlayEntry(
       builder: (ctx) {
         return Positioned(
           bottom: MediaQuery.of(ctx).size.height * 0.2,
@@ -34,9 +40,12 @@ class ToastUtils {
         );
       },
     );
-    overlayState.insert(overlayEntry);
-    Future.delayed(Duration(seconds: 2)).then((value) {
-      overlayEntry.remove();
+    overlayState.insert(_overlayEntry);
+
+    _timer = Timer.periodic(Duration(seconds: 2), (timer) {
+      _overlayEntry?.remove();
+      _overlayEntry = null;
+      timer.cancel();
     });
   }
 }
