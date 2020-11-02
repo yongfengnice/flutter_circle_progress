@@ -16,7 +16,9 @@ class ToastUtils {
         return Positioned(
           bottom: MediaQuery.of(ctx).size.height * 0.2,
           child: Material(
+            color: Colors.transparent,
             child: Container(
+              color: Colors.transparent,
               width: MediaQuery.of(ctx).size.width,
               alignment: Alignment.center,
               child: Container(
